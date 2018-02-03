@@ -4,7 +4,7 @@ import MySQLdb
 import time
 import math
 datetime_data = datetime.now()
-db = MySQLdb.connect(host="localhost", user="root", passwd="Lucaman", db="forest_fire_data")
+db = MySQLdb.connect(host="localhost", user="root", passwd="Password", db="forest_fire_data")
 initialize_variables = {"wind_direction":'a', "wind_magnitude":"b", "ambient_humidity":"c", "tree_density":"d", 
 "ambient_heat":"e", "terrain_fluctuations_comp":"f", "weather_data_received_online":"g", "time_stamp":"h", "query_number":"i"}
 extract_data = True
