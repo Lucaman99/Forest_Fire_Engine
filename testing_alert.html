@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head>
+  <title>Testing Alert System</title>
+</head>
+<body>
+  <div class= "green" onclick="one()">
+    <div class= "container">
+
+    </div>
+  </div>
+  <div class= "yellow" onclick="two()">
+    <div class= "container">
+
+    </div>
+  </div>
+  <div class= "red" onclick="three()">
+    <div class= "container">
+
+    </div>
+  </div>
+  <style>
+    .green {
+      width:100px;
+      height:100px;
+      background-color:green;
+    }
+    .yellow {
+      width:100px;
+      height:100px;
+      background-color:orange;
+    }
+    .red {
+      width:100px;
+      height:100px;
+      background-color:red;
+    }
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  var socket = io()
+  function one() {
+    socket.emit('fire_event', ["green", "No Fires Currently Detected By Any Robots", ""])
+  }
+  function two() {
+    socket.emit('fire_event', ["orange", "The Conditions Currently Detected Are Optimal For Fire Ignition", "Coordinates: (0.0 N, 0.0 W)"])
+  }
+  function three() {
+    socket.emit('fire_event', ["red", "A Fire Is Currently Detected", "Coordinates: (0.0 N, 0.0 W)"])
+  }
+  </script>
+</body>
