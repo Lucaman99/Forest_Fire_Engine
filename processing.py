@@ -7,7 +7,7 @@ import pyowm
 
 location_key = "0123"
 
-db = MySQLdb.connect(host="localhost", user="root", passwd="Lucaman", db="forest_fire_data")
+db = MySQLdb.connect(host="localhost", user="root", passwd="Password", db="forest_fire_data")
 cur = db.cursor()
 cur.execute("SELECT * FROM real_time_2")
 lists = cur.fetchall()[len(cur.fetchall())-1]
