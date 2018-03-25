@@ -61,7 +61,7 @@ temp_init = []
 light = []
 light_init = []
 
-db = MySQLdb.connect(host="localhost", user="root", passwd="Lucaman", db="testing")
+db = MySQLdb.connect(host="localhost", user="root", passwd="Password", db="testing")
 cur = db.cursor()
 cur.execute("SELECT value2 FROM test")
 lists = cur.fetchall()
@@ -496,7 +496,7 @@ thisboi = measure(1100, 40)
 
 print(thisboi[2])
 
-db = MySQLdb.connect(host="localhost", user="root", passwd="Lucaman", db="forest_fire_data")
+db = MySQLdb.connect(host="localhost", user="root", passwd="Password", db="forest_fire_data")
 cur = db.cursor()
 lists = ""
 for g in thisboi[0]:
