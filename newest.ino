@@ -1,3 +1,5 @@
+//We credit certain snipets of this code to Adafruit industries, and other developers who created the libraries and built-in functions for the specific sensors that we are usinf.
+
 #include <Servo.h>
 #include <SPI.h>
 #include <string.h>
