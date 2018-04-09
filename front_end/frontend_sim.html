@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Front-End</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class= "nav" id="na">
+    <div class= "container">
+        <h2>Forest Fire Simulation</h2>
+        </div>
+    </div>
+    <div class= "menu">
+      <div class= "container">
+        Grid-Area: <input type="text" id="op6" name="option6" size="30">
+        <button type="button" id="bu" name="button" onclick="a()">Submit</button> <button type="button" id="bt" name="butto" onclick="b()">Stop</button>
+      </div>
+    </div>
+    <div class= "display">
+    <div class= "container">
+        <br><br>
+        <table id="fi">
+        </table>
+        </div>
+    </div>
+    <p id="cl"></p>
+</body>
+<style>
+    .nav {
+       width:1440px;
+        height:35px;
+        background-color:black;
+        margin-top:-20px;
+        margin-left:-8px;
+
+    }
+    .nav h2 {
+        font-family:Helvetica;
+        color:white;
+        padding-left:5px;
+        padding-top:3px;
+    }
+    td {
+        width:5px;
+        height:5px;
+        border:1px solid;
+        border-collapse:collapse;
+    }
+    #fi {
+        border-collapse:collapse;
+    }
+    #ks {
+        height:10px;
+        width:10px;
+        border:none;
+    }
+    .menu {
+      position:absolute;
+    }
+</style>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+function a() {
+  var x = parseInt(document.getElementById('op6').value);
+  if (x < 500) {
+    for (var i = 0; i < x; i++) {
+      var f = document.getElementById('fi').insertRow(i)
+      f.className = "tr"+String(i)
+      for (var v = 0; v < x; v++) {
+        var g = f.insertCell(v)
+        g.className = "td"+String(v)
+      }
+    }
+  }
+}
+
+$(document).ready(function (){
+var socket = io()
+socket.on('flaming', function (data) {
+  holder = []
+  for (var i = 0; i < data.split(";").length; i++) {
+    holder.push(data.split(";")[i].substring(0, data.split(";")[i].length - 1).split(","))
+  }
+  var b = 0
+  for (var i = 0; i < holder.length; i++) {
+   $(".tr"+String((holder[i][0]))).find(".td"+String((holder[i][1]))).css("background-color", "darkgreen")
+  }
+  var y = 0
+  var counting = 0
+  var timez = []
+  var inter = []
+  for (var o = 0; o < holder.length; o++) {
+    if (holder[o].length > 3) {
+    timez.push(holder[o][3])
+  }
+  }
+  var time_tot = timez.sort(function (a, b) { return a-b })[timez.length - 1]
+  function abc() {
+    for (var i = 0; i < holder.length; i++) {
+      if (holder[i][2] == "burn" && holder[i][3] == y) {
+        $(".tr"+String((holder[i][0]))).find(".td"+String((holder[i][1]))).css("background-color", "orange")
+      }
+      if (holder[i][2] == "burn" && holder[i][3] == y-3) {
+        $(".tr"+String((holder[i][0]))).find(".td"+String((holder[i][1]))).css("background-color", "saddlebrown")
+        holder[i][2] = "gone"
+      }
+    }
+    y++
+    counting++
+  }
+  listy_boi = []
+  for (var c = 1; c <= time_tot; c++) {
+    var coun = 0
+    for (var j = 0; j < holder.length; j++) {
+      if (holder[j][3] == c && coun == 0) {
+        listy_boi.push(holder[j][4]);
+        var coun = coun + 1
+      }
+    }
+  }
+
+  var interval = setInterval(abc, 200)
+})
+})
+
+
+function b() {
+  clearInterval(interval)
+}
+
+</script>
+</html>
