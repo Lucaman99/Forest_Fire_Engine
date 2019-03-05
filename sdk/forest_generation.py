@@ -40,6 +40,8 @@ value can take on the numbers 0, 1, or 2.
 
 '''
 
+#FUTURE FUNCTIONALITY: CHANGE THE FUNCTIONS TO CLASSES
+
 import random
 import numpy
 
@@ -85,42 +87,188 @@ def CreateRandomGrid(width, length, tree_density):
 
 def CreateFixedGrid(width, length, coordinate_file):
     grid = generate_grid(width, length)
-    file = open(coordinate_file, "r") # BUG: Coordinate file is a string
-    converted_file = list(file)
-    for x in converted_file:
+    filename = coordinate_file
+    f = open(filename, 'r')
+    data = f.read()
+    data = data.replace(', ', ',').split(' ')
+    a = []
+    for x in data:
+        x = eval(x)
+        a.append(x)
+    for x in a:
         for i in grid:
             if (x in i):
-                i[1] == 1
+                i[1] = 1
     return grid
 
-
+#FUTURE FUNCTIONALITY: Create chain-links between the different clusters, add in function with the prob_grid for searching for spots where clusters may work
 
 def CreateClusterGrid(width, length, meanclustersize, frac_allowed, tree_density):
     #Generates an empty grid forest
     grid = generate_grid(width, length)
+    co = generate_coordinates(width, length)
 
     #Defines how trees will be clustered on the grid
-    num_trees_for_cluster = frac_allowed*tree_density
-    num_trees_for_connection = (1-frac_allowed)*tree_density
+    num_trees_for_cluster = math.floor(frac_allowed*tree_density)
+    num_trees_for_connection = math.floor((1-frac_allowed)*tree_density)
 
     #Define the tree clusters
     cluster = []
-    while (num_trees_for_cluster >= 5):
+    while (num_trees_for_cluster >= meanclustersize):
         num_trees_for_cluster = num_trees_for_cluster - meanclustersize
         cluster.append(meanclustersize)
     for i in range(num_trees_for_cluster):
         cluster[i] += 1
 
+    random_placement = False
+    truth = False
+
     #Place the tree clusters on the grid
     cluster_count = len(cluster)
-    for i in (cluster_count):
-        pass
+
+    for cu, i in enumerate(cluster):
+        h = False
+
+        while (h == False):
+            random_placement = random.randint(0, len(grid)-1)
+            if (grid[random_placement][1] == 0):
+                grid[random_placement][1] = 1
+                h = True
+
+        trees_to_spread_from = [grid[random_placement][0]]
+
+        holding = trees_to_spread_from
+        counter = 0
+
+        trees_are_here = [grid[random_placement][0]]
+
+        while (len(trees_are_here) < i):
+
+
+            for tr in trees_to_spread_from:
+
+                meantime = []
+
+                for xc in range(0, 4):
+
+                    movements = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+                    random_move = random.choice(movements)
+                    if ([tr[0]+random_move[0], tr[1]+random_move[1]] in co):
+                        cor = co.index([tr[0]+random_move[0], tr[1]+random_move[1]])
+
+                        if (grid[cor][1] == 0 and len(trees_are_here) < i):
+                            grid[cor][1] = 1
+                            trees_are_here.append(grid[cor][0])
+                            counter = counter + 1
+                            del movements[movements.index(random_move)]
+                            meantime.append(grid[cor][0])
+
+            if (meantime == []):
+                num_trees_for_connection = num_trees_for_connection + i - (counter+1)
+                break
+
+    no_tree = []
+    for bn in grid:
+        if (bn[1] == 0):
+            no_tree.append(bn)
+
+    counter2 = 0
+    while (counter2 < num_trees_for_connection):
+        num = random.randint(0, len(no_tree) - 1)  # Chooses a random coordinate to place the tree
+        if (grid[grid.index(no_tree[num])][1] == 0):  # If the coordinate is empty place a tree
+            grid[grid.index(no_tree[num])][1] = 1
+            counter2 += 1
+
+    return grid
+
+
+
+
+
+
+
+
+    #Scatter the rest of the trees randomlly
+
 
 # Uses a calculated probability radius
 
 #IN THE FUTURE, WE WILL CONSIDER USING THE OUTWARD STAGGERED SUM SQUARED METHOD OF DATA-DISTRIBUTION (WEIGHTED RANDOM CHOICE BASED ON AVERAGE TAXICAB METRIC FROM TREE)
 
 # [GridObject, [x, y], width, length]
+
+def CreateEvenGrid(width, length, prob_iter, tree_density):
+    trees = tree_density
+    grid = generate_grid(width, length)
+    prob_grid = generate_prob_grid(width, length)
+    co = generate_coordinates(width, length)
+
+    trees_are_here = []
+
+    #How much the probability increases as the distance from a tree increases
+    #In the grid-based simulation, the taxicab metric is used: d(x, y) = |x_2 - x_1| + |y_2 - y_1|
+
+    #Place the first tree at some random location
+    num = random.randint(0, len(grid)-1)
+
+    counter = 0
+
+    while (trees > 0):
+        # Places a tree wherever the random function selected it
+        grid[num][1] = 1
+        prob_grid[num][1] = 1
+        #Calculate maximum taxicab metric distance from random point to any other point on grid
+        #distance = max(abs(grid[num][0][0]-0), abs(grid[num][0][0]-width)) + max(abs(grid[num][0][1]-0), abs(grid[num][0][1]-length))
+        trees_are_here.append(grid[num][0])
+
+        max_value = 0
+
+        for g in prob_grid:
+            taxicab = abs(grid[num][0][0]-g[0][0])+abs(grid[num][0][1]-g[0][1])
+        #Checks whether the square is occupied by a tree
+            if (g[1] != 1):
+                if (g[2] == 0):
+                    # If there is no distance value assigned to the coordinate yet, add it in
+                    g[2] = taxicab
+                else:
+                    # Add the new distance value to the coordinate
+                    g[2] = math.floor(((g[2]*(tree_density-trees))+taxicab)/((tree_density-trees)+1))
+
+                if (g[2] > max_value):
+                    max_value = math.floor(g[2])
+
+        #all_squares = storage
+        #This happens once all the distances have been distributed on the grid
+        trees = trees - 1
+        #print(trees)
+
+        landing = False
+        toggle = False
+
+        distance = max_value
+
+        while (toggle == False):
+            counting_value = 0
+            while (landing == False):
+                for i in range(0, int(math.floor(distance))):
+                    val = distance-i
+                    if (np.random.choice([True, False], 1, [prob_iter, (1-prob_iter)])):
+                        landing = val
+                        break
+
+
+            shuffled_array = []
+            for n in prob_grid:
+                shuffled_array.append(n)
+            random.shuffle(shuffled_array)
+            for h in range (0, len(shuffled_array)):
+                if (shuffled_array[h][2] == landing and shuffled_array[h][0] not in trees_are_here and shuffled_array[h][1] != 1):
+                    num = prob_grid.index(shuffled_array[h])
+                    toggle = True
+                    break;
+            landing = False
+
+    return grid
 
 '''
 
