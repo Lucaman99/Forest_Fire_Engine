@@ -1,12 +1,16 @@
 '''
 SPARK v1.0 --> Generating grid-based forests for cellular-automata wildfire simulation backend
+
 Spark is a software package built and distributed by Ignite Labs
-Operations that can be called in order to generate a forest:
+
 ---------------------------------------------------------------
+
 At the moment, grids and composite grids must be rectangular,
 but support for irregularly shaped grids/composite grids will be
 introduced in the next version of Spark
+
 ---------------------------------------------------------------
+
 sparklib.CreateFixedGrid('width', 'length', 'coordinate_file')
 --> Creates a grid with fixed tree coordinates (read from a file)
 sparklib.CreateRandomGrid('width', 'length', 'tree_density')
@@ -17,7 +21,9 @@ sparklib.CreateEvenGrid('width', 'length', 'probradius', 'tree_density')
 --> Creates a grid that distributes trees very evenly and tries to avoid clusters
 sparklib.CreateCompositeGrid('width', 'length', arg1.coordinate('top_left'), ..., argn.coordinate('top_left'))
 --> Creates a grid that involved a mixture of different grid types (previously defined methods)
+
 ---------------------------------------------------------------
+
 Output of all functions should be an array with coordinates [ [ [0, 0], 0], [ [0, 1], 1 ], ..., [ [n, n], 0 ] ]
 Given [[0, 0], 0], the two values in the first bracket represents the coordinates of the tree (x, y), the third
 value can take on the numbers 0, 1, or 2.
