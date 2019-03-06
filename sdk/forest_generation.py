@@ -1,49 +1,38 @@
 '''
 SPARK v1.0 --> Generating grid-based forests for cellular-automata wildfire simulation backend
-
 Spark is a software package built and distributed by Ignite Labs
-
 Operations that can be called in order to generate a forest:
-
 ---------------------------------------------------------------
-
 At the moment, grids and composite grids must be rectangular,
 but support for irregularly shaped grids/composite grids will be
 introduced in the next version of Spark
-
 ---------------------------------------------------------------
-
 sparklib.CreateFixedGrid('width', 'length', 'coordinate_file')
 --> Creates a grid with fixed tree coordinates (read from a file)
-
 sparklib.CreateRandomGrid('width', 'length', 'tree_density')
 --> Creates a grid with randomly placed trees, but with a fixed tree density (unless the 'random') keyword is passed
-
 sparklib.CreateClusterGrid('width', 'length', 'meanclustersize', 'frac_allowed' 'tree_density')
 --> Creates a grid of trees with patches that clustered close together (NEW FEATURE)
-
 sparklib.CreateEvenGrid('width', 'length', 'probradius', 'tree_density')
 --> Creates a grid that distributes trees very evenly and tries to avoid clusters
-
 sparklib.CreateCompositeGrid('width', 'length', arg1.coordinate('top_left'), ..., argn.coordinate('top_left'))
 --> Creates a grid that involved a mixture of different grid types (previously defined methods)
-
 ---------------------------------------------------------------
-
 Output of all functions should be an array with coordinates [ [ [0, 0], 0], [ [0, 1], 1 ], ..., [ [n, n], 0 ] ]
-
 Given [[0, 0], 0], the two values in the first bracket represents the coordinates of the tree (x, y), the third
 value can take on the numbers 0, 1, or 2.
-
 0 indicates no tree in the given coordinate, 1 indicates that a tree exists in that coordinate, and 2 indicates
  that there was a tree in that coordinate but it was burned down after an iteration of the simulation
-
 '''
 
 #FUTURE FUNCTIONALITY: CHANGE THE FUNCTIONS TO CLASSES
 
 import random
 import numpy
+import MySQLdb
+import math
+import numpy as np
+from matplotlib import pyplot as plt
 
 #General function that can be called to generate an empty forest grid
 
@@ -109,16 +98,21 @@ def CreateClusterGrid(width, length, meanclustersize, frac_allowed, tree_density
     co = generate_coordinates(width, length)
 
     #Defines how trees will be clustered on the grid
-    num_trees_for_cluster = math.floor(frac_allowed*tree_density)
-    num_trees_for_connection = math.floor((1-frac_allowed)*tree_density)
+    num_trees_for_cluster = int(math.floor(frac_allowed*tree_density))
+    num_trees_for_connection = int(math.floor((1-frac_allowed)*tree_density))
 
     #Define the tree clusters
     cluster = []
     while (num_trees_for_cluster >= meanclustersize):
         num_trees_for_cluster = num_trees_for_cluster - meanclustersize
         cluster.append(meanclustersize)
-    for i in range(num_trees_for_cluster):
-        cluster[i] += 1
+    if (len(cluster) > 0):
+        while (num_trees_for_cluster > 0):
+            for i in range(len(cluster)):
+                cluster[i] += 1
+                num_trees_for_cluster -= 1
+    else:
+        num_trees_for_connection += num_trees_for_cluster
 
     random_placement = False
     truth = False
@@ -144,14 +138,14 @@ def CreateClusterGrid(width, length, meanclustersize, frac_allowed, tree_density
 
         while (len(trees_are_here) < i):
 
+            meantime = []
+
 
             for tr in trees_to_spread_from:
-
-                meantime = []
+                movements = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
                 for xc in range(0, 4):
 
-                    movements = [[0, 1], [0, -1], [1, 0], [-1, 0]]
                     random_move = random.choice(movements)
                     if ([tr[0]+random_move[0], tr[1]+random_move[1]] in co):
                         cor = co.index([tr[0]+random_move[0], tr[1]+random_move[1]])
@@ -162,6 +156,8 @@ def CreateClusterGrid(width, length, meanclustersize, frac_allowed, tree_density
                             counter = counter + 1
                             del movements[movements.index(random_move)]
                             meantime.append(grid[cor][0])
+
+            trees_to_spread_from = meantime
 
             if (meantime == []):
                 num_trees_for_connection = num_trees_for_connection + i - (counter+1)
@@ -269,13 +265,5 @@ def CreateEvenGrid(width, length, prob_iter, tree_density):
             landing = False
 
     return grid
-
-'''
-
-UNDER CONSTRUCTION!
-
-Class CreateCompositeGrid:
-    def __init__(self, *args)
-    generate_grid(width, length)
-
-'''
+   
+   
