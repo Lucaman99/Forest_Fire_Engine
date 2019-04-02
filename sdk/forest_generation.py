@@ -1,7 +1,7 @@
 '''
 SPARK v1.0 --> Generating grid-based forests for cellular-automata wildfire simulation backend
 
-Spark is a software package built and distributed by Ignite Labs
+Spark is a software package built and distributed by Ignite Labs developed by Jack Ceroni and Abdullah Hadi
 
 ---------------------------------------------------------------
 
