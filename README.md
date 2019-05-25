@@ -3,7 +3,7 @@
 A collection of code that will be combined with an Arduino-powered robot to detect, predict, and model forest fires.
 
 
-Disclaimer: We are currently in the process of reworking the entire simulation algorithm and the basis for the mathematical model. The code will constantly be updates, therefore, if you are using any of our libraries, we will break your code. We will update this page once the majority of our updates are complete 
+Disclaimer: We are currently in the process of reworking the entire simulation algorithm and the basis for the mathematical model. The code will constantly be updates, therefore, if you are using any of our libraries, **we will break your code**. We will update this page once the majority of our updates are complete 
 
 **Abstract** 
 
