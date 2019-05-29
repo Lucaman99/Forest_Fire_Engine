@@ -112,5 +112,3 @@ def CreateEvenGrid(width, length, prob_iter, tree_density):
                     break;
             landing = False
     return grid
-
-print(CreateEvenGrid(2, 2, 0.9, 2))
