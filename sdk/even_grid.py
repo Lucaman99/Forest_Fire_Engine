@@ -85,8 +85,7 @@ def CreateEvenGrid(width, length, prob_iter, tree_density):
                             else:
                                 # Add the new distance value to the coordinate
                                 prob_grid[co.index(g)][2] = ((prob_grid[co.index(g)][2]*counter)+j+1)/(counter+1)
-            all_squares = storage
-            print(storage)
+            #all_squares = storage
 
         #This happens once all the distances have been distributed on the grid
         trees = trees - 1
@@ -95,7 +94,7 @@ def CreateEvenGrid(width, length, prob_iter, tree_density):
         landing = False
         toggle = False
 
-        print(trees_are_here)
+        #print(trees_are_here)
 
         while (toggle == False):
             while (landing == False):
