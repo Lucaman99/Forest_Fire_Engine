@@ -1,4 +1,6 @@
-# Forest_Fire_Engine
+# Forest Fire Engine
+
+THIS LIBRAY IS BEING OVERHAULED: https://www.overleaf.com/read/dgmgghvhssfv
 
 A collection of code that will be combined with an Arduino-powered robot to detect, predict, and model forest fires.
 
