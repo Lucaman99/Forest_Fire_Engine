@@ -10,6 +10,7 @@ Welcome to Ignite Labs's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   Tutorials/Cumulative_Burn_Graph
 
 
 Indices and tables
