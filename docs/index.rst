@@ -9,8 +9,13 @@ Welcome to Ignite Labs's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-   Tutorials/Cumulative_Burn_Graph
+ 
+   intro
+   tutorials
+   api
+   release
+   citing
+   credits
 
 
 Indices and tables
