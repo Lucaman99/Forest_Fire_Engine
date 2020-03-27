@@ -2,7 +2,7 @@
 
 [![Documentation Status](https://readthedocs.org/projects/ignite-labs/badge/?version=latest)](https://ignite-labs.readthedocs.io/en/latest/?badge=latest)
 
-THIS LIBRAY IS BEING OVERHAULED: https://www.overleaf.com/read/dgmgghvhssfv
+THIS LIBRAY IS BEING COMPLETELY OVERHAULED: https://www.overleaf.com/read/dgmgghvhssfv
 
 A collection of code that will be combined with an Arduino-powered robot to detect, predict, and model forest fires.
 
