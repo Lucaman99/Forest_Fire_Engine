@@ -25,6 +25,7 @@
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
         <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -159,6 +160,23 @@
             
   <div class="section" id="getting-started-with-inferno-cumulative-burn-graphs">
 <h1>Getting Started With Inferno: Cumulative Burn Graphs<a class="headerlink" href="#getting-started-with-inferno-cumulative-burn-graphs" title="Permalink to this headline">¶</a></h1>
+<p>In this introductory tutorial, we are going to show how to use Inferno to look at the relationship between <strong>tree density</strong>, and <strong>completion</strong>, for a simple square-lattice
+based forest, and a simple cellular-automation simulator. [1]</p>
+<p>First, let’s go over a few definitions. To start, a <strong>forest</strong> is defined as some graph, <span class="math notranslate nohighlight">\(G = (V, E)\)</span>. Each node corresponds to some spatial position within the forest, and the edges specify
+how fire is allowed to spread over the nodes. For our simulation, we will be considering a very basic graph called a <strong>square lattice</strong>. We define a square lattice as follows: given some number <span class="math notranslate nohighlight">\(N\)</span>, which we call the length of our lattice, we define a set <span class="math notranslate nohighlight">\(N\)</span> linear graphs, <span class="math notranslate nohighlight">\(H\)</span>, each <span class="math notranslate nohighlight">\(N\)</span> nodes such that for <span class="math notranslate nohighlight">\(G \ \in \ H\)</span>, we have:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(E(G) \ = \ \{(v_n, v_{n+1}) \ | \ v_i \ \in \ V\}\)</span></strong></p><p>Let’s index the elements of <span class="math notranslate nohighlight">\(H\)</span> by <span class="math notranslate nohighlight">\(i\)</span>, where <span class="math notranslate nohighlight">\(G_i \ \in \ H\)</span>. We define the vertex set, <span class="math notranslate nohighlight">\(V_{\ell}^N\)</span>, of our lattice graph to be:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(V_{\ell}^N \ = \ \displaystyle\bigcup_{i = 1}^{N} V(G_i)\)</span></strong></p><p>Continuing on, we define <span class="math notranslate nohighlight">\(v_{i_{n}}\)</span> to be the <span class="math notranslate nohighlight">\(n\)</span>-th vertex of the <span class="math notranslate nohighlight">\(i\)</span>-th linear graph. We define the edge-set of our lattice graph, <span class="math notranslate nohighlight">\(E_{\ell}^N\)</span>, to be:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(E_{\ell}^N \ = \ \Big( \displaystyle\bigcup_{i = 1}^{N} E(G_i) \Big) \ \cup \ \{ (v_{i_n}, v_{(i + 1)_n}) \ | \ v_{k_n} \ \in \ V_{\ell} \}\)</span></strong></p><p>Thus, our square lattice graph of length <span class="math notranslate nohighlight">\(N\)</span> is given by <span class="math notranslate nohighlight">\(G_{\ell}^{N} \ = \ (V_{\ell}^N, E_{\ell}^N)\)</span> looks something like this:</p>
+<p class="centered">
+<strong>PUT IMAGE HERE</strong></p><p>So as you can see, our forest graph resembles a grid, with nodes being connected to each other in square cycles.</p>
+<p>For our forest, we define a <strong>state function</strong>, <span class="math notranslate nohighlight">\(\delta(v, t)\)</span>, for some <span class="math notranslate nohighlight">\(v \in V(G)\)</span>, and some time-step <span class="math notranslate nohighlight">\(t\)</span> of our simulation. The
+state function is able to map each vertex in the forest to either <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(0\)</span>. If the state function maps a vertex to <span class="math notranslate nohighlight">\(1\)</span>, we say that at time <span class="math notranslate nohighlight">\(t\)</span>, the node contains a tree.</p>
+<p>For the purposes of this simple simulation, we will assume that <span class="math notranslate nohighlight">\(\delta(v, 0) = \delta(v, t)\)</span>, for all <span class="math notranslate nohighlight">\(t\)</span>. Basically, we assume that no new trees are growing (or somehow appearing) in our forest during the simulation. This simplifies our model greatly. Now, let’s consider what the values of <span class="math notranslate nohighlight">\(\delta(v, t)\)</span> will be for each <span class="math notranslate nohighlight">\(v \ \in \ V_{\ell}\)</span>. It is possible to manualy specify the exact value of the function at every node, but for large graphs, this becomes cumbersome. Thus, Inferno allows us to <strong>randomize</strong> placement of trees onto our graph. Specifically, for some arbitrary forest, <span class="math notranslate nohighlight">\(V\)</span>, we know that the total number of trees in this forest will be given as <span class="math notranslate nohighlight">\(\rho\)</span>, with:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(\rho \ = \ \displaystyle\sum_{n} \delta(v_n)\)</span></strong></p><p>For all <span class="math notranslate nohighlight">\(v_n \ \in \ V\)</span>. We can thus choose some number <span class="math notranslate nohighlight">\(\rho\)</span>, and randomly assign <span class="math notranslate nohighlight">\(\delta(v_n) \ = \ 1\)</span> for <span class="math notranslate nohighlight">\(\rho\)</span> vertices <span class="math notranslate nohighlight">\(v_n\)</span>. Behind the scenes, the way that Inferno does this is by generating <span class="math notranslate nohighlight">\(\rho\)</span> pseudo-random coordinates, <span class="math notranslate nohighlight">\((x, \ y)\)</span>, with <span class="math notranslate nohighlight">\(1 \ \leq \ x, y \ \leq \ N\)</span>, and set <span class="math notranslate nohighlight">\(\delta(v_{x_y}) \ = \ 1\)</span> for all these number pairs.</p>
 </div>
 
 
