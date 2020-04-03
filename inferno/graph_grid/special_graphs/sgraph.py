@@ -1,3 +1,9 @@
+'''
+IGNITE LABS
+Date: April 1st, 2020
+Author: Jack Ceroni
+'''
+
 import graph
 import numpy as np
 import random
@@ -13,12 +19,14 @@ class SquareLatticeGraph:
 
         #Initializes the vertex structure of the square lattice graph
         vertices = []
+        vertices_index = []
         for i in range(0, length):
             for j in range(0, length):
-                vertex = graph.Vertex(index=[i, j])
+                vertex = graph.Vertex(v_index=[i, j])
                 vertices.append(vertex)
+                vertices_index.append(vertex.v_index)
         
-        vertices = graph.index_arrange(vertices)
+        #vertices = graph.index_arrange(vertices)
         self.vertices = vertices
 
         # Initializes the edge structure of the square lattice graph
@@ -27,20 +35,17 @@ class SquareLatticeGraph:
         # Creates the horizontal edge connection
         for i in range(0, length):
             for j in range(0, length-1):
-                edges.append(graph.Edge(start_vertex=vertices[j, i], end_vertex=vertices[j+1, i]))
+                edges.append(graph.Edge([i, j], [i, j+1]))
 
         # Creates the vertical edge connections
-        for i in range(0, length-1):
-            for j in range(0, length):
-                edges.append(graph.Edge(start_vertex=vertices[j, i], end_vertex=vertices[j, i+1]))
+        for i in range(0, length):
+            for j in range(0, length-1):
+                edges.append(graph.Edge([j, i], [j+1, i]))
         
         # TODO: Sort the list of edges with the index sorting function?
-
+    
         self.graph = graph.Graph(vertices, edges)
     
 
 def function(x, t):
     return 0
-
-test_graph = SquareLatticeGraph(10, function)
-
