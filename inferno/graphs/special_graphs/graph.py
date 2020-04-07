@@ -7,17 +7,22 @@ Author: Jack Ceroni
 # Defines the Edge class
 
 class Edge:
-    def __init__(self, start_node_index, end_node_index):
+    def __init__(self, start_node, end_node):
 
-        self.start_node = start_node_index
-        self.end_node = end_node_index
-        self.e_index = [start_node_index, end_node_index]
+        self.sv = start_node
+        self.ev = end_node
+        self.start_node = start_node.v_index
+        self.end_node = end_node.v_index
+        self.e_index = [start_node.v_index, end_node.v_index]
 
 # Defines the Vertex class
 
 class Vertex:
     def __init__(self, v_index):
         self.v_index = v_index
+        self.state = 0
+        self.burn = 0
+        self.connections = []
 
 # Defines the Graph class
 
@@ -28,7 +33,7 @@ class Graph:
         node_set = vertices
         edges_set = edges
 
-        self.node_set = node_set
+        self.vertex_set = node_set
 
         edges_index_set = []
         for i in edges_set:
@@ -54,6 +59,14 @@ class Graph:
         
         self.edges_set = new_edges_set
         self.edges_index_set = new_edges_index_set
+
+        # Defines connections between edges
+        for i in range(0, len(vertex_index_set)):
+            for k in edges_set:
+                if (vertex_index_set[i] == k.start_node):
+                    node_set[i].connections.append(k.ev)
+                if (vertex_index_set[i] == k.end_node):
+                    node_set[i].connections.append(k.sv)
 
 '''
 #Connects nodes with an edge
@@ -94,10 +107,7 @@ class Graph:
             del self.edges_set[self.edges_set.index(edge)]
 '''
 
-# Arranges the vertices in a dictionary order, based on their index
-
-#def index_arrange(
-
-
-
+v = [Vertex(1), Vertex(2)]
+e = [Edge(v[0], v[1])]
+g = Graph(v, e)
 
