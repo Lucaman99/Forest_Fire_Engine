@@ -4,6 +4,8 @@
 
 THIS LIBRAY IS BEING COMPLETELY OVERHAULED: https://www.overleaf.com/read/dgmgghvhssfv
 
+![code](carbon.png)
+
 A collection of code that will be combined with an Arduino-powered robot to detect, predict, and model forest fires.
 
 
