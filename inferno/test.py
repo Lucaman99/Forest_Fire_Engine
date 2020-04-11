@@ -4,11 +4,12 @@ from tqdm import tqdm
 import copy
 
 trials = 20
+num = 30
 y = []
 
-lattice_graph = inferno.sgraph.SquareLatticeGraph(length=50)
+lattice_graph = inferno.sgraph.SquareLatticeGraph(length=num)
 
-for i in tqdm(range(1, 50)):
+for i in tqdm(range(1, num)):
     sum = 0
     for j in range(0, trials):
 
@@ -21,7 +22,7 @@ for i in tqdm(range(1, 50)):
         # We define the necessary variables
 
         init_number = 1
-        density = float(i/50)
+        density = float(i/num)
 
         # We define the necessary functions used in the simulation
         init_function = inferno.sim.initialize.Random_Init_Number(number=init_number)
@@ -49,5 +50,5 @@ for i in tqdm(range(1, 50)):
     
     y.append(float(sum / trials))
 
-plt.plot(range(1, 50), y)
+plt.plot(range(1, num), y)
 plt.show()
