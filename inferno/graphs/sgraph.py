@@ -4,7 +4,7 @@ Date: April 1st, 2020
 Author: Jack Ceroni
 '''
 
-import graph
+from .graph import Graph, Vertex, Edge
 import numpy as np
 import random
 import math
@@ -21,7 +21,7 @@ class SquareLatticeGraph:
         vertices_index = []
         for i in range(0, length):
             for j in range(0, length):
-                vertex = graph.Vertex(v_index=[i, j])
+                vertex = Vertex(v_index=[i, j])
                 vertices.append(vertex)
                 vertices_index.append(vertex.v_index)
         
@@ -42,20 +42,13 @@ class SquareLatticeGraph:
         # Creates the horizontal edge connection
         for i in range(0, length):
             for j in range(0, length-1):
-                edges.append(graph.Edge( vertices[vertices_index.index([i, j])] , vertices[vertices_index.index([i, j+1])] ))
-
+                edges.append(Edge(vertices[vertices_index.index([i, j])], vertices[vertices_index.index([i, j+1])] ))
+        
         # Creates the vertical edge connections
         for i in range(0, length):
             for j in range(0, length-1):
-                edges.append(graph.Edge(vertices[vertices_index.index([j, i])],vertices[vertices_index.index([j+1, i])]))
+                edges.append(Edge(vertices[vertices_index.index([j, i])], vertices[vertices_index.index([j+1, i])]))
         
         # TODO: Sort the list of edges with the index sorting function?
     
-        self.graph = graph.Graph(vertices, edges)
-    
-
-def function(x, t):
-    return 0
-
-s = SquareLatticeGraph(10).graph.edges_index_set
-print(s)
+        self.graph = Graph(vertices, edges, True)

@@ -1,63 +1,53 @@
 import inferno
 from matplotlib import pyplot as plt
-import math
+from tqdm import tqdm
+import copy
 
+trials = 20
+y = []
 
-#METHOD --> Pick the graph that has the greatest coorelation to the "average" graph
+lattice_graph = inferno.sgraph.SquareLatticeGraph(length=50)
 
-def cumulative_burn_sum(length, width, tree_density, iterations):
-    max_length = 0
-    final = []
-    for n in range(0, iterations):
-        g = inferno.CreateRandomGrid(length, width, tree_density, 0, 0)
-        fire = inferno.spread_random_fire(g)
-        maximum = 0
-        for i in fire:
-            if (i[3] > maximum):
-                maximum = i[3]
+for i in tqdm(range(1, 50)):
+    sum = 0
+    for j in range(0, trials):
 
-        y = []
-        add = 0
-        for i in range(0, maximum+1):
-            for j in fire:
-                if (j[3] == i and j[2] == 1):
-                    add = add + 1
-            y.append(add)
-        if (len(y) > max_length):
-            max_length = len(y)
-        final.append(y)
+        # Start by creating the grid
 
-    tell = final
+        for k in lattice_graph.graph.vertex_set:
+            k.state = 0
+            k.burn = 0
 
-    append_arr = []
+        # We define the necessary variables
 
-    for i in range (0, len(final)):
-        counting = 0
-        for n in range(0, max_length-len(final[i])):
-            final[i].append(final[i][len(final[i])-1])
-            counting = counting+1
-        append_arr.append(counting)
+        init_number = 1
+        density = float(i/50)
 
-    all = [sum(v) for v in zip(*list(final))]
-    #This is the so-called "cost" list
-    all_two = [a/iterations for a in all]
+        # We define the necessary functions used in the simulation
+        init_function = inferno.sim.initialize.Random_Init_Number(number=init_number)
+        state_function = inferno.sim.state.Density_State(density=density)
+        update_function = inferno.sim.update.Von_Neumann_CA_Basic()
 
-    cost = math.inf
-    the_chosen_one = []
-    for h in final:
-        transport = 0
-        for j in range(0, len(h)):
-            transport = transport + abs(h[j]-all_two[j])
-        if (transport < cost):
-            cost = transport
-            the_chosen_one = tell[final.index(h)][0:(len(h)-append_arr[final.index(h)])]
+        # We then create the simulation object
 
-    the_chosen_one = all_two
+        simulator = inferno.Simulator(
+            graph=lattice_graph, 
+            state_function=state_function, 
+            burn_function=update_function,
+            init_function=init_function,
+            )
+        
+        # Run the simulation
 
-    x = range(0, len(the_chosen_one))
-    print(the_chosen_one)
-    print(cost)
-    plt.plot(x, the_chosen_one)
-    plt.show()
+        results = simulator.simulate(termination=1e14)
 
-cumulative_burn_sum(50, 50, 100, 10)
+        # Calculate the completion of the final graph
+
+        final_graph = results.final_graph
+        completion = inferno.completion(final_graph)
+        sum += completion
+    
+    y.append(float(sum / trials))
+
+plt.plot(range(1, 50), y)
+plt.show()
