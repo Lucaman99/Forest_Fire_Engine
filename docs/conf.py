@@ -41,6 +41,7 @@ release = ''
 extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
+    'sphinx_math_dollar',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
