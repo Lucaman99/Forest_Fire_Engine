@@ -45,7 +45,6 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx_math_dollar', 
-    'sphinx.ext.mathjax'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -181,8 +180,6 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
-
-extensions = ['sphinx_math_dollar', 'sphinx.ext.mathjax']
 
 # -- Options for todo extension ----------------------------------------------
 
