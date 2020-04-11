@@ -4,6 +4,9 @@ Date: March 22nd, 2020
 Author: Jack Ceroni
 '''
 
+import networkx as nx
+from matplotlib import pyplot as plt
+
 # Defines the Edge class
 
 class Edge:
@@ -75,6 +78,17 @@ class Graph:
                     node_set[i].connections.append(k.ev)
                 if (vertex_index_set[i] == k.end_node):
                     node_set[i].connections.append(k.sv)
+    
+    def draw(self):
+        
+        G = nx.Graph()
+
+        for z in self.edges_set:
+            G.add_edge(str(z.start_node), str(z.end_node))
+
+        pos = nx.spring_layout(G, iterations=200)
+        nx.draw(G, pos)
+        plt.show()
         
 '''
 #Connects nodes with an edge

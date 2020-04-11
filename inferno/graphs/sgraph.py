@@ -26,7 +26,6 @@ class SquareLatticeGraph:
                 vertices_index.append(vertex.v_index)
         
         #vertices = graph.index_arrange(vertices)
-        self.vertices = vertices
 
         # Searches for the longest entry in vertices_index
         '''
@@ -52,3 +51,9 @@ class SquareLatticeGraph:
         # TODO: Sort the list of edges with the index sorting function?
     
         self.graph = Graph(vertices, edges, True)
+    
+    def reset(self):
+
+        for k in self.graph.vertex_set:
+            k.state = 0
+            k.burn = 0
