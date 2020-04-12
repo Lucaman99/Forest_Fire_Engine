@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Getting Started With Inferno: Forest Completion and Tree Density &mdash; Ignite Labs  documentation</title>
+  <title>Getting Started With Inferno: Final Completion and Tree Density &mdash; Ignite Labs  documentation</title>
   
 
   
@@ -85,7 +85,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials and Projects</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Getting Started With Inferno: Forest Completion and Tree Density</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Getting Started With Inferno: Final Completion and Tree Density</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
@@ -139,7 +139,7 @@
         
           <li><a href="../../tutorials.html">Tutorials and Projects</a> &raquo;</li>
         
-      <li>Getting Started With Inferno: Forest Completion and Tree Density</li>
+      <li>Getting Started With Inferno: Final Completion and Tree Density</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -158,9 +158,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="getting-started-with-inferno-forest-completion-and-tree-density">
-<h1>Getting Started With Inferno: Forest Completion and Tree Density<a class="headerlink" href="#getting-started-with-inferno-forest-completion-and-tree-density" title="Permalink to this headline">¶</a></h1>
-<p>In this introductory tutorial, we are going to show how to use Inferno to look at the relationship between <strong>tree density</strong>, and <strong>completion</strong>, for a simple square-lattice
+  <div class="section" id="getting-started-with-inferno-final-completion-and-tree-density">
+<h1>Getting Started With Inferno: Final Completion and Tree Density<a class="headerlink" href="#getting-started-with-inferno-final-completion-and-tree-density" title="Permalink to this headline">¶</a></h1>
+<p>In this introductory tutorial, we are going to show how to use Inferno to look at the relationship between <strong>tree density</strong>, and <strong>final completion</strong>, for a simple square-lattice
 based forest, and a simple cellular-automation simulator. [1]</p>
 <p>First, let’s go over a few definitions. To start, a <strong>forest</strong> is defined as some graph, <span class="math notranslate nohighlight">\(G = (V, E)\)</span>. Each node corresponds to some spatial position within the forest, and the edges specify
 how fire is allowed to spread over the nodes. For our simulation, we will be considering a very basic graph called a <strong>square lattice</strong>. We define a square lattice as follows: given some number <span class="math notranslate nohighlight">\(N\)</span>, which we call the length of our lattice, we define a set <span class="math notranslate nohighlight">\(N \)</span>, each <span class="math notranslate nohighlight">\(N\)</span> nodes such that for <span class="math notranslate nohighlight">\(G \ \in \ H\)</span>, we have:</p>
@@ -171,24 +171,115 @@ how fire is allowed to spread over the nodes. For our simulation, we will be con
 <p class="centered">
 <strong><span class="math notranslate nohighlight">\(E_{\ell}^N \ = \ \Big( \displaystyle\bigcup_{i = 1}^{N} E(G_i) \Big) \ \cup \ \{ (v_{i_n}, v_{(i + 1)_n}) \ | \ v_{k_n} \ \in \ V_{\ell} \}\)</span></strong></p><p>Thus, our square lattice graph of length <span class="math notranslate nohighlight">\(N\)</span> is given by <span class="math notranslate nohighlight">\(G_{\ell}^{N} \ = \ (V_{\ell}^N, E_{\ell}^N)\)</span> looks something like this:</p>
 <p class="centered">
-<strong>PUT IMAGE HERE</strong></p><p>So as you can see, our forest graph resembles a grid, with nodes being connected to each other in square cycles. We can do this fairly easily in Inferno, as a square lattice is one of the built-in graphs:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inferno</span>
-
-<span class="c1"># Creates the grid</span>
-<span class="n">lattice_graph</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">sgraph</span><span class="o">.</span><span class="n">SquareLatticeGraph</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
-</pre></div>
-</div>
+<strong>PUT IMAGE HERE</strong></p><p>So as you can see, our forest graph resembles a grid, with nodes being connected to each other in square cycles. We can do this fairly easily in Inferno, as a square lattice is one of the built-in graphs.</p>
 <p>For our forest, we define a <strong>state function</strong>, <span class="math notranslate nohighlight">\(\delta(v, t)\)</span>, for some <span class="math notranslate nohighlight">\(v \in V(G)\)</span>, and some time-step <span class="math notranslate nohighlight">\(t\)</span> of our simulation. The
 state function is able to map each vertex in the forest to either <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(0\)</span>. If the state function maps a vertex to <span class="math notranslate nohighlight">\(1\)</span>, we say that at time <span class="math notranslate nohighlight">\(t\)</span>, the node contains a tree.</p>
-<p>For the purposes of this simple simulation, we will assume that <span class="math notranslate nohighlight">\(\delta(v, 0) = \delta(v, t)\)</span>, for all <span class="math notranslate nohighlight">\(t\)</span>. Basically, we assume that no new trees are growing (or somehow appearing) in our forest during the simulation. This simplifies our model greatly. Now, let’s consider what the values of <span class="math notranslate nohighlight">\(\delta(v, t)\)</span> will be for each <span class="math notranslate nohighlight">\(v \ \in \ V_{\ell}\)</span>. It is possible to manualy specify the exact value of the function at every node, but for large graphs, this becomes cumbersome. Thus, Inferno allows us to <strong>randomize</strong> placement of trees onto our graph. Specifically, for some arbitrary forest, <span class="math notranslate nohighlight">\(V\)</span>, we know that the total number of trees in this forest will be given as <span class="math notranslate nohighlight">\(\rho\)</span>, with:</p>
+<p>For the purposes of this simple simulation, we will assume that <span class="math notranslate nohighlight">\(\delta(v, 0) = \delta(v, t)\)</span>, for all <span class="math notranslate nohighlight">\(t\)</span>. Basically, we assume that no new trees are growing (or somehow appearing) in our forest during the simulation. This simplifies our model greatly. Now, let’s consider what the values of <span class="math notranslate nohighlight">\(\delta(v, t)\)</span> will be for each <span class="math notranslate nohighlight">\(v \ \in \ V_{\ell}\)</span>. It is possible to manualy specify the exact value of the function at every node, but for large graphs, this becomes cumbersome. Thus, Inferno allows us to <strong>randomize</strong> placement of trees onto our graph. Specifically, for some arbitrary forest, <span class="math notranslate nohighlight">\(V\)</span>, we know that the total number of trees in this forest will be given as <span class="math notranslate nohighlight">\(\rho(t)\)</span>, with:</p>
 <p class="centered">
-<strong><span class="math notranslate nohighlight">\(\rho \ = \ \displaystyle\sum_{n} \delta(v_n)\)</span></strong></p><p>For all <span class="math notranslate nohighlight">\(v_n \ \in \ V\)</span>. We can thus choose some number <span class="math notranslate nohighlight">\(\rho\)</span>, and randomly assign <span class="math notranslate nohighlight">\(\delta(v_n) \ = \ 1\)</span> for <span class="math notranslate nohighlight">\(\rho\)</span> vertices <span class="math notranslate nohighlight">\(v_n\)</span>. Behind the scenes, the way that Inferno does this is by generating <span class="math notranslate nohighlight">\(\rho\)</span> pseudo-random coordinates, <span class="math notranslate nohighlight">\((x, \ y)\)</span>, with <span class="math notranslate nohighlight">\(1 \ \leq \ x, y \ \leq \ N\)</span>, and set <span class="math notranslate nohighlight">\(\delta(v_{x_y}) \ = \ 1\)</span> for all these number pairs. We define the <strong>tree density</strong>, <span class="math notranslate nohighlight">\(\sigma\)</span>, of our graph as “another way” to write the total number of trees, as it is just the number of trees divided by the number of nodes:</p>
+<strong><span class="math notranslate nohighlight">\(\rho(t) \ = \ \displaystyle\sum_{v \ \in \ V} \delta(v, \ t)\)</span></strong></p><p>For all <span class="math notranslate nohighlight">\(v_n \ \in \ V\)</span>. We can thus choose some number <span class="math notranslate nohighlight">\(\rho\)</span>, and randomly assign <span class="math notranslate nohighlight">\(\delta(v_n) \ = \ 1\)</span> for <span class="math notranslate nohighlight">\(\rho\)</span> vertices <span class="math notranslate nohighlight">\(v_n\)</span>. Behind the scenes, the way that Inferno does this is by generating <span class="math notranslate nohighlight">\(\rho\)</span> pseudo-random coordinates, <span class="math notranslate nohighlight">\((x, \ y)\)</span>, with <span class="math notranslate nohighlight">\(1 \ \leq \ x, y \ \leq \ N\)</span>, and set <span class="math notranslate nohighlight">\(\delta(v_{x_y}) \ = \ 1\)</span> for all these number pairs. We define the <strong>tree density</strong>, <span class="math notranslate nohighlight">\(\sigma\)</span>, of our graph as “another way” to write the total number of trees, as it is just the number of trees divided by the number of nodes:</p>
 <p class="centered">
 <strong><span class="math notranslate nohighlight">\(\sigma \ = \ \dfrac{\rho}{|V(G)|}\)</span></strong></p><p>This is the number that we will be feeding into our state function, which will be used in the simulation. In addition to the state function, we also must define an <strong>update function</strong> which is another function <span class="math notranslate nohighlight">\(\beta: V \ \times \ T \ \rightarrow \ \{0, \ 1\}\)</span>, which tells us at some time <span class="math notranslate nohighlight">\(t\)</span>, whether some vertex <span class="math notranslate nohighlight">\(v\)</span> has been “burned” by the simulation. Note that for some vertex <span class="math notranslate nohighlight">\(w\)</span>, it can only be true that <span class="math notranslate nohighlight">\(\beta(w, \ t) \ = \ 1\)</span> if <span class="math notranslate nohighlight">\(\delta(w,  \ t) \ = \ 1\)</span> (basically, a vertex can only “burn” at time <span class="math notranslate nohighlight">\(t\)</span> if it contains a tree at time <span class="math notranslate nohighlight">\(t\)</span>). In the simulation of our algorithm, we are going to implement a “cellular-automata-like” update rule, where for some <span class="math notranslate nohighlight">\(w \ \in \ V\)</span>, if <span class="math notranslate nohighlight">\(\beta(w, \ t) \ = \ 1\)</span>, then <span class="math notranslate nohighlight">\(\beta(x, \ t + 1) \ = \ 1\)</span> for all <span class="math notranslate nohighlight">\(x \ \in \ (w)\)</span>. We then define:</p>
 <p class="centered">
 <strong><span class="math notranslate nohighlight">\(U(w) \ = \ \{x \ | \ x \ \in \ N(w), \ \delta(x, \ t + 1) \ = \ 1\}\)</span></strong></p><p>Where <span class="math notranslate nohighlight">\(N(w)\)</span> is defined to be the neighbourhood of <span class="math notranslate nohighlight">\(w\)</span>:</p>
 <p class="centered">
 <strong><span class="math notranslate nohighlight">\(N(w) \ = \ \{v \ | \ v \ \in \ V(G), \ (w, \ v) \ \in \ E(G)\}\)</span></strong></p><p>In simpler language, fire can spread from a burning vertex to another vertex that is connected to the burning vertex, if the other vertex contains a tree. This is similar to the idea of a cellular-automaton spreading to grid squares that are a taxicab distance of <span class="math notranslate nohighlight">\(1\)</span> away from the original square (the Von Neumann neighbourhood of the original square). Thus, we call this particular function the Von Neumann cellular-automaton update function (this function is built-into Inferno as well).</p>
+<p>In order for our simulation to actually begin, we are going to have to specify the value of <span class="math notranslate nohighlight">\(\beta(v, \ 0)\)</span> for all vertices <span class="math notranslate nohighlight">\(v\)</span>. We call this set of values (particularly the special case of <span class="math notranslate nohighlight">\(\beta\)</span> at time eqaul to <span class="math notranslate nohighlight">\(0\)</span>) the <strong>initialization function</strong>. For this simulation, it makes sense for us to chooe some random vertex that contains a tree, and set its initial update function to one. We can do this eaily in Inferno (as random initialization is a built-in function).</p>
+<p>Now, we can turn our attention to the problem we are actually trying to investigate. We are interested in determining how <strong>final completion</strong> of our graph changes with increasing tree density. Firstly, we define completion of some forest graph, at some time <span class="math notranslate nohighlight">\(C(G, \ t)\)</span> is defined as:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(C(G, \ t) \ = \ \dfrac{1}{\rho(t)} \ \displaystyle\sum_{v \ \in \ V(G)} \ \beta(v, \ t)\)</span></strong></p><p>Thee final completion is a specific instance of the completion, where <span class="math notranslate nohighlight">\(t \ = \ T\)</span>, where <span class="math notranslate nohighlight">\(T\)</span> is the time-step of the simulation such that (for this <strong>specific</strong> simulation):</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(\beta(v, \ T) \ = \ \beta(v, \ T + 1)\)</span></strong></p><p>for all <span class="math notranslate nohighlight">\(v \ \in \ V\)</span>. Basically, the simulation terminates when the graph the update functions reaches a point where it remains constant for all future times. Note that this is only the termination condition for this specific instance of the update function, other update functions may remain constant for two or more iterations, and then change, but for this particular simulation, the update function must yield different parameter values at at least one node on any given time-step.</p>
+<p>With all of this theory now out of the way, we can now begin creating our simulations! We are interested in varying tree density and plotting it against final completion of our graph. We start by importing all of the necessary dependencies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Imports the necessary dependencies</span>
+
+<span class="kn">import</span> <span class="nn">inferno</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="k">import</span> <span class="n">tqdm</span>
+</pre></div>
+</div>
+<p>I’m going to use <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> to make graphs of the results at the end of the simulation and <code class="docutils literal notranslate"><span class="pre">tqdm</span></code> to make a nice looking progeress bar when I run the simulations (this isn’t totally necessary, but I definitely reccomend it). Now, we can specify some initial variables. Firstly, we need to specify the length of our lattice graph. For this simulation, we will set that to <span class="math notranslate nohighlight">\(30\)</span>. In addition, in order to calculate the final completion for each value of the tree density, we will need to run the simulation many times and take the average of those trials. We will set the number of iterations for each individual value of the tree density to <span class="math notranslate nohighlight">\(20\)</span>. Finally, we create an empty list in which we will store all of the calculated values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Defines initial parameters and empty list to store final values</span>
+
+<span class="n">trials</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">length</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<p>Next, we will define the lattice graph (which, as we said, is one of the graphs that is built into Inferno):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creates the grid</span>
+
+<span class="n">lattice_graph</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">sgraph</span><span class="o">.</span><span class="n">SquareLatticeGraph</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, with the graph, we can define the big loop that we will use to run the simulation over and over:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="p">)):</span>
+    <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">trials</span><span class="p">):</span>
+
+        <span class="c1"># Simulation trials happen here</span>
+</pre></div>
+</div>
+<p>Where we are essentially running through a bunch of possible tree densities (we are going up in units of “length of the graph”, instead of one-by-one, as we don’t want the simulation to go on forever), for the given number of trials. We use the variable <code class="docutils literal notranslate"><span class="pre">sum</span></code> in order to keep track of the outcomes of all our trials, which we then divide by the number of trials to get the average. Inside the loop, we now begin the simulation. For each trial, we reset the parameters of our graph. We also define <code class="docutils literal notranslate"><span class="pre">init_number</span></code> which is the number of trees that
+burn at time zero, and the tree density:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Resets the graph before each iteration of the simulation</span>
+
+<span class="n">lattice_graph</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="c1"># Defines the necessary variables</span>
+
+<span class="n">init_number</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">density</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="n">length</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>We now define our initialization, update, and state functions (since the particular functions we are using are basic, they are built into Inferno already):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Defines the necessary functions used in the simulation</span>
+
+<span class="n">init_function</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">initialize</span><span class="o">.</span><span class="n">Random_Init_Number</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">init_number</span><span class="p">)</span>
+<span class="n">state_function</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">Density_State</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="n">density</span><span class="p">)</span>
+<span class="n">update_function</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">Von_Neumann_CA_Basic</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can now create the simulator object and run the simulation (which will return a simulation object):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creates the simulation object</span>
+
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">Simulator</span><span class="p">(</span>
+    <span class="n">graph</span><span class="o">=</span><span class="n">lattice_graph</span><span class="p">,</span>
+    <span class="n">state_function</span><span class="o">=</span><span class="n">state_function</span><span class="p">,</span>
+    <span class="n">burn_function</span><span class="o">=</span><span class="n">update_function</span><span class="p">,</span>
+    <span class="n">init_function</span><span class="o">=</span><span class="n">init_function</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="c1"># Runs the simulation</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">simulator</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">termination</span><span class="o">=</span><span class="mf">1e14</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we calculate the final completion of the graph:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculates the completion of the final graph</span>
+
+<span class="n">final_graph</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">final_graph</span>
+<span class="n">completion</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">completion</span><span class="p">(</span><span class="n">final_graph</span><span class="p">)</span>
+<span class="nb">sum</span> <span class="o">+=</span> <span class="n">completion</span>
+</pre></div>
+</div>
+<p>Now, we exit the second loop and are inside the first loop. We calculate the average completion for all of our trials:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the average completion for a given density and add it to the final list</span>
+
+<span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">sum</span> <span class="o">/</span> <span class="n">trials</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>To end this simulation off, we exit the first loop, and graph the results using <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plots the average completion against the tree density</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="o">/</span><span class="n">length</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">length</span><span class="p">)],</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Tree Density&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Final Completion&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>When we run this simulation, we get a graph that looks something like this:</p>
+<a class="reference internal image-reference" href="../../_images/td_fc.png"><img alt="../../_images/td_fc.png" class="align-center" src="../../_images/td_fc.png" style="width: 500px;" /></a>
+<p>So we are seeing that as we increase the density of trees, we eventually reach an inflection point where the completion spikes up and stabilizes for larger values. This kind of work could actually have somer interesting applications when it comes to fighting fires: if one could determine how close trees are together, then we can determine whether we are to the left of the inflection point, and can expect the fire to remain controllable, or if it is on the right side, where the fire can grow to large, uncontrollable sizes very quickly. It also might be interesting to investigate the standard deviation of the trials for each individual tree density, and maybe come up with metrics that allow us to understand how “volatile” our forest is (where depending only on the initial point of ignition, the fire can be either a raging inferno or die out very quickly).</p>
 </div>
 
 

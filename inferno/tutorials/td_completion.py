@@ -7,14 +7,14 @@ from tqdm import tqdm
 # Defines initial parameters and empty list to store final values
 
 trials = 20
-num = 30
+length = 30
 y = []
 
-# Starts by creating the grid
+# Creates the grid
 
-lattice_graph = inferno.sgraph.SquareLatticeGraph(length=num)
+lattice_graph = inferno.sgraph.SquareLatticeGraph(length=length)
 
-for i in tqdm(range(1, num)):
+for i in tqdm(range(1, length)):
     sum = 0
     for j in range(0, trials):
 
@@ -25,7 +25,7 @@ for i in tqdm(range(1, num)):
         # Defines the necessary variables
 
         init_number = 1
-        density = float(i/num)
+        density = float(i/length)
 
         # Defines the necessary functions used in the simulation
 
@@ -58,5 +58,7 @@ for i in tqdm(range(1, num)):
 
 # Plots the average completion against the tree density
 
-plt.plot(range(1, num), y)
+plt.plot([i/length for i in range(1, length)], y)
+plt.xlabel("Tree Density")
+plt.ylabel("Final Completion")
 plt.show()
