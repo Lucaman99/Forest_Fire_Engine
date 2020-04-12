@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Getting Started With Inferno: Cumulative Burn Graphs &mdash; Ignite Labs  documentation</title>
+  <title>Getting Started With Inferno: Forest Completion and Tree Density &mdash; Ignite Labs  documentation</title>
   
 
   
@@ -85,7 +85,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../intro.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../tutorials.html">Tutorials and Projects</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Getting Started With Inferno: Cumulative Burn Graphs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Getting Started With Inferno: Forest Completion and Tree Density</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
@@ -139,7 +139,7 @@
         
           <li><a href="../../tutorials.html">Tutorials and Projects</a> &raquo;</li>
         
-      <li>Getting Started With Inferno: Cumulative Burn Graphs</li>
+      <li>Getting Started With Inferno: Forest Completion and Tree Density</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -158,12 +158,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="getting-started-with-inferno-cumulative-burn-graphs">
-<h1>Getting Started With Inferno: Cumulative Burn Graphs<a class="headerlink" href="#getting-started-with-inferno-cumulative-burn-graphs" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="getting-started-with-inferno-forest-completion-and-tree-density">
+<h1>Getting Started With Inferno: Forest Completion and Tree Density<a class="headerlink" href="#getting-started-with-inferno-forest-completion-and-tree-density" title="Permalink to this headline">¶</a></h1>
 <p>In this introductory tutorial, we are going to show how to use Inferno to look at the relationship between <strong>tree density</strong>, and <strong>completion</strong>, for a simple square-lattice
 based forest, and a simple cellular-automation simulator. [1]</p>
 <p>First, let’s go over a few definitions. To start, a <strong>forest</strong> is defined as some graph, <span class="math notranslate nohighlight">\(G = (V, E)\)</span>. Each node corresponds to some spatial position within the forest, and the edges specify
-how fire is allowed to spread over the nodes. For our simulation, we will be considering a very basic graph called a <strong>square lattice</strong>. We define a square lattice as follows: given some number <span class="math notranslate nohighlight">\(N\)</span>, which we call the length of our lattice, we define a set <span class="math notranslate nohighlight">\(N\)</span> linear graphs, <span class="math notranslate nohighlight">\(H\)</span>, each <span class="math notranslate nohighlight">\(N\)</span> nodes such that for <span class="math notranslate nohighlight">\(G \ \in \ H\)</span>, we have:</p>
+how fire is allowed to spread over the nodes. For our simulation, we will be considering a very basic graph called a <strong>square lattice</strong>. We define a square lattice as follows: given some number <span class="math notranslate nohighlight">\(N\)</span>, which we call the length of our lattice, we define a set <span class="math notranslate nohighlight">\(N \)</span>, each <span class="math notranslate nohighlight">\(N\)</span> nodes such that for <span class="math notranslate nohighlight">\(G \ \in \ H\)</span>, we have:</p>
 <p class="centered">
 <strong><span class="math notranslate nohighlight">\(E(G) \ = \ \{(v_n, v_{n+1}) \ | \ v_i \ \in \ V\}\)</span></strong></p><p>Let’s index the elements of <span class="math notranslate nohighlight">\(H\)</span> by <span class="math notranslate nohighlight">\(i\)</span>, where <span class="math notranslate nohighlight">\(G_i \ \in \ H\)</span>. We define the vertex set, <span class="math notranslate nohighlight">\(V_{\ell}^N\)</span>, of our lattice graph to be:</p>
 <p class="centered">
@@ -171,12 +171,24 @@ how fire is allowed to spread over the nodes. For our simulation, we will be con
 <p class="centered">
 <strong><span class="math notranslate nohighlight">\(E_{\ell}^N \ = \ \Big( \displaystyle\bigcup_{i = 1}^{N} E(G_i) \Big) \ \cup \ \{ (v_{i_n}, v_{(i + 1)_n}) \ | \ v_{k_n} \ \in \ V_{\ell} \}\)</span></strong></p><p>Thus, our square lattice graph of length <span class="math notranslate nohighlight">\(N\)</span> is given by <span class="math notranslate nohighlight">\(G_{\ell}^{N} \ = \ (V_{\ell}^N, E_{\ell}^N)\)</span> looks something like this:</p>
 <p class="centered">
-<strong>PUT IMAGE HERE</strong></p><p>So as you can see, our forest graph resembles a grid, with nodes being connected to each other in square cycles.</p>
+<strong>PUT IMAGE HERE</strong></p><p>So as you can see, our forest graph resembles a grid, with nodes being connected to each other in square cycles. We can do this fairly easily in Inferno, as a square lattice is one of the built-in graphs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">inferno</span>
+
+<span class="c1"># Creates the grid</span>
+<span class="n">lattice_graph</span> <span class="o">=</span> <span class="n">inferno</span><span class="o">.</span><span class="n">sgraph</span><span class="o">.</span><span class="n">SquareLatticeGraph</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>For our forest, we define a <strong>state function</strong>, <span class="math notranslate nohighlight">\(\delta(v, t)\)</span>, for some <span class="math notranslate nohighlight">\(v \in V(G)\)</span>, and some time-step <span class="math notranslate nohighlight">\(t\)</span> of our simulation. The
 state function is able to map each vertex in the forest to either <span class="math notranslate nohighlight">\(1\)</span> or <span class="math notranslate nohighlight">\(0\)</span>. If the state function maps a vertex to <span class="math notranslate nohighlight">\(1\)</span>, we say that at time <span class="math notranslate nohighlight">\(t\)</span>, the node contains a tree.</p>
 <p>For the purposes of this simple simulation, we will assume that <span class="math notranslate nohighlight">\(\delta(v, 0) = \delta(v, t)\)</span>, for all <span class="math notranslate nohighlight">\(t\)</span>. Basically, we assume that no new trees are growing (or somehow appearing) in our forest during the simulation. This simplifies our model greatly. Now, let’s consider what the values of <span class="math notranslate nohighlight">\(\delta(v, t)\)</span> will be for each <span class="math notranslate nohighlight">\(v \ \in \ V_{\ell}\)</span>. It is possible to manualy specify the exact value of the function at every node, but for large graphs, this becomes cumbersome. Thus, Inferno allows us to <strong>randomize</strong> placement of trees onto our graph. Specifically, for some arbitrary forest, <span class="math notranslate nohighlight">\(V\)</span>, we know that the total number of trees in this forest will be given as <span class="math notranslate nohighlight">\(\rho\)</span>, with:</p>
 <p class="centered">
-<strong><span class="math notranslate nohighlight">\(\rho \ = \ \displaystyle\sum_{n} \delta(v_n)\)</span></strong></p><p>For all <span class="math notranslate nohighlight">\(v_n \ \in \ V\)</span>. We can thus choose some number <span class="math notranslate nohighlight">\(\rho\)</span>, and randomly assign <span class="math notranslate nohighlight">\(\delta(v_n) \ = \ 1\)</span> for <span class="math notranslate nohighlight">\(\rho\)</span> vertices <span class="math notranslate nohighlight">\(v_n\)</span>. Behind the scenes, the way that Inferno does this is by generating <span class="math notranslate nohighlight">\(\rho\)</span> pseudo-random coordinates, <span class="math notranslate nohighlight">\((x, \ y)\)</span>, with <span class="math notranslate nohighlight">\(1 \ \leq \ x, y \ \leq \ N\)</span>, and set <span class="math notranslate nohighlight">\(\delta(v_{x_y}) \ = \ 1\)</span> for all these number pairs.</p>
+<strong><span class="math notranslate nohighlight">\(\rho \ = \ \displaystyle\sum_{n} \delta(v_n)\)</span></strong></p><p>For all <span class="math notranslate nohighlight">\(v_n \ \in \ V\)</span>. We can thus choose some number <span class="math notranslate nohighlight">\(\rho\)</span>, and randomly assign <span class="math notranslate nohighlight">\(\delta(v_n) \ = \ 1\)</span> for <span class="math notranslate nohighlight">\(\rho\)</span> vertices <span class="math notranslate nohighlight">\(v_n\)</span>. Behind the scenes, the way that Inferno does this is by generating <span class="math notranslate nohighlight">\(\rho\)</span> pseudo-random coordinates, <span class="math notranslate nohighlight">\((x, \ y)\)</span>, with <span class="math notranslate nohighlight">\(1 \ \leq \ x, y \ \leq \ N\)</span>, and set <span class="math notranslate nohighlight">\(\delta(v_{x_y}) \ = \ 1\)</span> for all these number pairs. We define the <strong>tree density</strong>, <span class="math notranslate nohighlight">\(\sigma\)</span>, of our graph as “another way” to write the total number of trees, as it is just the number of trees divided by the number of nodes:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(\sigma \ = \ \dfrac{\rho}{|V(G)|}\)</span></strong></p><p>This is the number that we will be feeding into our state function, which will be used in the simulation. In addition to the state function, we also must define an <strong>update function</strong> which is another function <span class="math notranslate nohighlight">\(\beta: V \ \times \ T \ \rightarrow \ \{0, \ 1\}\)</span>, which tells us at some time <span class="math notranslate nohighlight">\(t\)</span>, whether some vertex <span class="math notranslate nohighlight">\(v\)</span> has been “burned” by the simulation. Note that for some vertex <span class="math notranslate nohighlight">\(w\)</span>, it can only be true that <span class="math notranslate nohighlight">\(\beta(w, \ t) \ = \ 1\)</span> if <span class="math notranslate nohighlight">\(\delta(w,  \ t) \ = \ 1\)</span> (basically, a vertex can only “burn” at time <span class="math notranslate nohighlight">\(t\)</span> if it contains a tree at time <span class="math notranslate nohighlight">\(t\)</span>). In the simulation of our algorithm, we are going to implement a “cellular-automata-like” update rule, where for some <span class="math notranslate nohighlight">\(w \ \in \ V\)</span>, if <span class="math notranslate nohighlight">\(\beta(w, \ t) \ = \ 1\)</span>, then <span class="math notranslate nohighlight">\(\beta(x, \ t + 1) \ = \ 1\)</span> for all <span class="math notranslate nohighlight">\(x \ \in \ (w)\)</span>. We then define:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(U(w) \ = \ \{x \ | \ x \ \in \ N(w), \ \delta(x, \ t + 1) \ = \ 1\}\)</span></strong></p><p>Where <span class="math notranslate nohighlight">\(N(w)\)</span> is defined to be the neighbourhood of <span class="math notranslate nohighlight">\(w\)</span>:</p>
+<p class="centered">
+<strong><span class="math notranslate nohighlight">\(N(w) \ = \ \{v \ | \ v \ \in \ V(G), \ (w, \ v) \ \in \ E(G)\}\)</span></strong></p><p>In simpler language, fire can spread from a burning vertex to another vertex that is connected to the burning vertex, if the other vertex contains a tree. This is similar to the idea of a cellular-automaton spreading to grid squares that are a taxicab distance of <span class="math notranslate nohighlight">\(1\)</span> away from the original square (the Von Neumann neighbourhood of the original square). Thus, we call this particular function the Von Neumann cellular-automaton update function (this function is built-into Inferno as well).</p>
 </div>
 
 
