@@ -150,4 +150,14 @@ When we run this simulation, we get a graph that looks something like this:
     :width: 500
     :align: center
 
-So we are seeing that as we increase the density of trees, we eventually reach an inflection point where the completion spikes up and stabilizes for larger values. This kind of work could actually have somer interesting applications when it comes to fighting fires: if one could determine how close trees are together, then we can determine whether we are to the left of the inflection point, and can expect the fire to remain controllable, or if it is on the right side, where the fire can grow to large, uncontrollable sizes very quickly. It also might be interesting to investigate the standard deviation of the trials for each individual tree density, and maybe come up with metrics that allow us to understand how "volatile" our forest is (where depending only on the initial point of ignition, the fire can be either a raging inferno or die out very quickly).
+So we are seeing that as we increase the density of trees, we eventually reach an inflection point where the completion spikes up and stabilizes for larger values. This kind of work could actually have somer interesting applications when it comes to fighting fires: if one could determine how close trees are together, then we can determine whether we are to the left of the inflection point, and can expect the fire to remain controllable, or if it is on the right side, where the fire can grow to large, uncontrollable sizes very quickly. It also might be interesting to investigate the variance of the trials for each individual tree density, and maybe come up with metrics that allow us to understand how "volatile" our forest is (where depending only on the initial point of ignition, the fire can be either a raging inferno or die out very quickly). We can actually do this fairly easily. Since the variance of some random variable (like final completion) is given by:
+
+.. centered:: :math:`\sigma^2 \ = \ \langle C(G, \ T)^2 \rangle \ - \ \langle C(G, T) \rangle^2`
+
+All we have to do is sum up the squared value of each value of the final completion, then calculate the expectation value in the same manner as we calculate the "un-squared" expectation value in the previous simulation. We then plug the two values into this formula and plot the results, getting a graph that looks something like this:
+
+.. image:: assets/sd.png
+    :width: 500
+    :align: center
+
+This suggets that our simulations are the most voaltile and unpredictable when the tree density is a bit over :math:`0.6`. There are practically infinite different scenarios and peices of data that can be learned from even simple simulations like the ones we did in this tutorial!
