@@ -31,13 +31,12 @@ class Vertex:
 
 class Graph:
 
-    def __init__(self, vertices, edges, mute):
+    def __init__(self, vertices, edges):
 
         node_set = vertices
         edges_set = edges
 
         self.vertex_set = node_set
-        self.mute = mute
 
         edges_index_set = []
         for i in edges_set:
@@ -48,28 +47,8 @@ class Graph:
             vertex_index_set.append(i.v_index)
         self.vertex_index_set = vertex_index_set
 
-        if (mute == False):
-
-            new_edges_set = []
-            new_edges_index_set = []
-
-            for i in range(0, len(edges_index_set)):
-                for j in edges_index_set[i]:
-                    switch = True
-                    if (j not in vertex_index_set):
-                        switch = False
-
-                if (switch == True):
-                    new_edges_set.append(edges_set[i])
-                    new_edges_index_set.append(edges_index_set[i])
-            
-            self.edges_set = new_edges_set
-            self.edges_index_set = new_edges_index_set
-        
-        else:
-
-            self.edges_set = edges_set
-            self.edges_index_set = edges_index_set
+        self.edges_set = edges_set
+        self.edges_index_set = edges_index_set
 
         # Defines connections between edges
         for i in range(0, len(vertex_index_set)):
@@ -78,7 +57,32 @@ class Graph:
                     node_set[i].connections.append(k.ev)
                 if (vertex_index_set[i] == k.end_node):
                     node_set[i].connections.append(k.sv)
+        
+        def check(self):
+
+            new_edges_set = []
+            new_edges_index_set = []
+
+            for i in range(0, len(self.edges_index_set)):
+                for j in self.edges_index_set[i]:
+                    switch = True
+                    if (j not in self.vertex_index_set):
+                        switch = False
+
+                if (switch == True):
+                    new_edges_set.append(self.edges_set[i])
+                    new_edges_index_set.append(self.edges_index_set[i])
+            
+            self.edges_set = new_edges_set
+            self.edges_index_set = new_edges_index_set
+        
+        def reset(self):
+
+            for k in self.graph.vertex_set:
+                k.state = 0
+                k.burn = 0
     
+    '''
     def draw(self):
         
         G = nx.Graph()
@@ -89,6 +93,7 @@ class Graph:
         pos = nx.spring_layout(G, iterations=200)
         nx.draw(G, pos)
         plt.show()
+    '''
         
 '''
 #Connects nodes with an edge

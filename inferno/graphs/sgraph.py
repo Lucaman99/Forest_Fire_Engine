@@ -50,10 +50,21 @@ class SquareLatticeGraph:
         
         # TODO: Sort the list of edges with the index sorting function?
     
-        self.graph = Graph(vertices, edges, True)
-    
-    def reset(self):
+        self.graph = Graph(vertices, edges)
 
-        for k in self.graph.vertex_set:
-            k.state = 0
-            k.burn = 0
+class CustomGraph:
+
+    def __init__(self, vertex_index, edges_index):
+
+        vertices = [Vertex(i) for i in vertices_index]
+        edges = []
+        for i in edges_index:
+            holder = [0, 0]
+            for j in vertices:
+                if (j.v_index == i[0]):
+                    holder[0] = j
+                if (j.v_index == i[1]):
+                    holder[1] = j
+            edges.append(Edge(holder[0], holder[1]))
+        
+        self.graph = Graph(vertices, edges)
