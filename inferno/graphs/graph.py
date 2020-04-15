@@ -58,29 +58,29 @@ class Graph:
                 if (vertex_index_set[i] == k.end_node):
                     node_set[i].connections.append(k.sv)
         
-        def check(self):
+    def check(self):
 
-            new_edges_set = []
-            new_edges_index_set = []
+        new_edges_set = []
+        new_edges_index_set = []
 
-            for i in range(0, len(self.edges_index_set)):
-                for j in self.edges_index_set[i]:
-                    switch = True
-                    if (j not in self.vertex_index_set):
-                        switch = False
+        for i in range(0, len(self.edges_index_set)):
+            for j in self.edges_index_set[i]:
+                switch = True
+                if (j not in self.vertex_index_set):
+                    switch = False
 
-                if (switch == True):
-                    new_edges_set.append(self.edges_set[i])
-                    new_edges_index_set.append(self.edges_index_set[i])
-            
-            self.edges_set = new_edges_set
-            self.edges_index_set = new_edges_index_set
+            if (switch == True):
+                new_edges_set.append(self.edges_set[i])
+                new_edges_index_set.append(self.edges_index_set[i])
         
-        def reset(self):
+        self.edges_set = new_edges_set
+        self.edges_index_set = new_edges_index_set
+    
+    def reset(self):
 
-            for k in self.graph.vertex_set:
-                k.state = 0
-                k.burn = 0
+        for k in self.vertex_set:
+            k.state = 0
+            k.burn = 0
     
     '''
     def draw(self):

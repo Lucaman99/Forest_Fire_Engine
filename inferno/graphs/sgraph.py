@@ -56,7 +56,7 @@ class CustomGraph:
 
     def __init__(self, vertex_index, edges_index):
 
-        vertices = [Vertex(i) for i in vertices_index]
+        vertices = [Vertex(i) for i in vertex_index]
         edges = []
         for i in edges_index:
             holder = [0, 0]
