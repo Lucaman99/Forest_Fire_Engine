@@ -19,6 +19,14 @@ class Von_Neumann_CA_Basic:
         
         return return_list
 
+class Custom_Update:
+
+    def __init__(self, function):
+        self.function = function
+    
+    def execute(self, graph, ):
+
+
         
 
 

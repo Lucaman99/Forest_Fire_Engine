@@ -19,7 +19,9 @@ Continuing on, we define :math:`v_{i_{n}}` to be the :math:`n`-th vertex of the 
 
 Thus, our square lattice graph of length :math:`N` is given by :math:`G_{\ell}^{N} \ = \ (V_{\ell}^N, E_{\ell}^N)` looks something like this:
 
-.. centered:: PUT IMAGE HERE
+.. image:: assets/graph.png
+    :width: 500
+    :align: center
 
 So as you can see, our forest graph resembles a grid, with nodes being connected to each other in square cycles. We can do this fairly easily in Inferno, as a square lattice is one of the built-in graphs.
 
@@ -161,3 +163,11 @@ All we have to do is sum up the squared value of each value of the final complet
     :align: center
 
 This suggets that our simulations are the most voaltile and unpredictable when the tree density is a bit over :math:`0.6`. There are practically infinite different scenarios and peices of data that can be learned from even simple simulations like the ones we did in this tutorial!
+
+By modifying our code, we can investigate several other non-trivial problems. For instance, by making some small modifications to the pre-existing simulation, we can determine the **number of time steps** our simulation takes before it terminates for different treee densities, getting a graph that looks something like this;
+
+.. image:: assets/execution_time.png
+    :width: 500
+    :align: center
+
+So we get another interesting result: for our simple model, a forst fire will take the longest to finish burning for a tree density between :math:`0.6` and :math:`0.7`. This is only one of many other problems that one can investigate with this extremely simple model. In the coming tutorials, we will be investigating different problems in the context of more sophisticated models.
