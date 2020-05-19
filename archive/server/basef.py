@@ -1,15 +1,14 @@
 import serial
 import MySQLdb
 
-ser = serial.Serial('/dev/ttyACM0', 115200)
+ser = serial.Serial("/dev/ttyACM0", 115200)
 
 while True:
     read_serial = ser.readline()
-    a = read_serial[read_serial.index('D')-1:len(read_serial)-1].split(',')
-    b = ''
+    a = read_serial[read_serial.index("D") - 1 : len(read_serial) - 1].split(",")
+    b = ""
     for t in a:
-        b = b + t +','
-        
+        b = b + t + ","
 
     print(b)
 

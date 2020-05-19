@@ -3,6 +3,7 @@ import time
 
 arr = []
 
+
 def one():
 
     db = MySQLdb.connect(host="localhost", user="root", passwd="Password", db="testing")
@@ -26,13 +27,13 @@ def one():
         datat = cur.fetchall()
         db.close()
 
-
-        if (base != len(datat)):
+        if base != len(datat):
             one()
         else:
             time.sleep(0.1)
             send()
 
     send()
+
 
 one()

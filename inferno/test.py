@@ -19,7 +19,7 @@ for i in tqdm(range(1, length)):
 
         # Resets the graph before each iteration of the simulation
 
-        lattice_graph.graph.reset()
+        lattice_graph.reset()
 
         # Defines the necessary variables
 

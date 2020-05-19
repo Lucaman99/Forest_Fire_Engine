@@ -26,7 +26,7 @@ for i in tqdm(range(1, length)):
         # Defines the necessary variables
 
         init_number = 1
-        density = float(i/length)
+        density = float(i / length)
 
         # Defines the necessary functions used in the simulation
 
@@ -37,12 +37,12 @@ for i in tqdm(range(1, length)):
         # Creates the simulation object
 
         simulator = inferno.Simulator(
-            graph=lattice_graph, 
-            state_function=state_function, 
+            graph=lattice_graph,
+            state_function=state_function,
             burn_function=update_function,
             init_function=init_function,
-            )
-        
+        )
+
         # Runs the simulation
 
         results = simulator.simulate(termination=1e14)
@@ -52,15 +52,15 @@ for i in tqdm(range(1, length)):
         final_graph = results.final_graph
         completion = inferno.completion(final_graph)
         sum += completion
-        squared_sum += completion**2
+        squared_sum += completion ** 2
 
     # Calculate the average completion for a given density and add it to the final list
-    
-    y.append(float(squared_sum / trials) - (float(sum / trials))**2)
+
+    y.append(float(squared_sum / trials) - (float(sum / trials)) ** 2)
 
 # Plots the average completion against the tree density
 
-plt.plot([i/length for i in range(1, length)], y)
+plt.plot([i / length for i in range(1, length)], y)
 plt.xlabel("Tree Density")
 plt.ylabel("SD of Measured Final Completion")
 plt.show()

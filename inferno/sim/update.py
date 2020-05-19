@@ -6,28 +6,25 @@ import math
 
 # A cellular-automation update function that spreads to Von Neumann neighbours (graph length 1) each time-step
 
-class Von_Neumann_CA_Basic:
 
+class Von_Neumann_CA_Basic:
     def execute(self, graph, nodes):
 
         return_list = []
         for i in nodes:
             for j in i.connections:
-                if (j.state == 1 and j.burn == 0):
+                if j.state == 1 and j.burn == 0:
                     j.burn = 1
                     return_list.append(j)
-        
+
         return return_list
 
+
+"""
 class Custom_Update:
 
     def __init__(self, function):
         self.function = function
     
     def execute(self, graph, ):
-
-
-        
-
-
-    
+"""
