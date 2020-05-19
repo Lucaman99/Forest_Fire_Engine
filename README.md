@@ -1,6 +1,7 @@
 # Forest Fire Engine
 
 [![Documentation Status](https://readthedocs.org/projects/ignite-labs/badge/?version=latest)](https://ignite-labs.readthedocs.io/en/latest/?badge=latest)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 THIS LIBRAY IS BEING COMPLETELY OVERHAULED: https://www.overleaf.com/read/dgmgghvhssfv
 
